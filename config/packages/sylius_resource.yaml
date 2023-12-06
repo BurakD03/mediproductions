@@ -1,0 +1,9 @@
+sylius_resource:
+    resources:
+        ############## ENTITE OFFICE ##############
+        app.office:
+            driver: doctrine/orm # You can use also different driver here
+            classes:
+                model: App\Entity\Office
+                repository: App\Repository\OfficeRepository
+                form : App\Form\OfficeType

@@ -1,0 +1,28 @@
+sylius_paypal_webhook:
+    resource: "@SyliusPayPalPlugin/Resources/config/webhook_routing.yaml"
+
+################## Office ##################
+app_admin_office:
+    resource: |
+        alias: app.office
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_office
+        vars:
+            all:
+                subheader: app.ui.office
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: admin
+    
+### CREATE OFFICE ###
+app_admin_office_create:
+    path: /admin/create/office
+    defaults:
+        _controller: App\Controller\OfficeController::create
+        _sylius:
+            section: admin
+            template: "@App/templates/office/index.html.twig"
+            permission: true  

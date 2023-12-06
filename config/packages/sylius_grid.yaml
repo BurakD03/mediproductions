@@ -1,0 +1,14 @@
+# sylius_grid:
+#     grids:
+#         app_admin_office:
+#             driver:
+#                 name: doctrine/orm
+#                 options:
+#                     class: App\Entity\Office
+#             fields:
+#                 name:
+#                     type: string
+#                     label: sylius.ui.name
+#                 # user:
+#                 #     type: twig
+#                 #     label: sylius.ui.name
