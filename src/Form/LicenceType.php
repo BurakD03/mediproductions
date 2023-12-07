@@ -23,29 +23,35 @@ class LicenceType extends AbstractType
             //         'placeholder' => 'Start',
             //     ]
             // ])
+            // ->add('endedAt',  TextType::class, [
+            //     'attr' => [
+            //         'placeholder' => 'End',
+            //     ]
+            // ])
             ->add('startedAt',  DateType::class, [
                 'widget' => 'single_text',
                 'attr' => [
                     'placeholder' => 'Start',
-                    'type' => 'text'
+                    // 'type' => 'text'
                 ]
             ])
-            ->add('endedAt',  TextType::class, [
+            ->add('endedAt',  DateType::class, [
+                'widget' => 'single_text',
                 'attr' => [
                     'placeholder' => 'End',
                 ]
             ])
             ->add('platform',  ChoiceType::class, [
                 'choices'  => [
-                    'CRM' => 0,
-                    'Shop' => 1,
+                    'CRM' => 'CRM',
+                    'Shop' => 'Shop',
                 ],
             ])
             ->add('demo')
             ->add('state', ChoiceType::class, [
                 'choices'  => [
-                    'In progress' => 0,
-                    'Completed' => 1,
+                    'In progress' => 'In progress',
+                    'Completed' => 'Completed',
                 ],
             ])
             ->add('codeCrm')

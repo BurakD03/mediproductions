@@ -42,24 +42,17 @@
         {% else %}
             {# {{ form_widget(form) }} #}
             <div class="ui form">
+            {{ form_errors(form) }}
                 <div class="two fields">
                     <div class="field">
+                        <label>Start date</label>
                         <div class="ui calendar" id="rangestart">
                             <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            {{ form_widget(form.startedAt, {'attr': {'class': 'datepicker'}}) }}
+                            {{ form_widget(form.startedAt) }}
                             </div>
                         </div>
-                    </div> 
-
-                    {# <label>Start date</label>
-                    <div class="ui calendar" id="rangestart">
-                        <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        {{ form_widget(form.startedAt) }}
-                        </div>
                     </div>
-                    </div> #}
                     <div class="field">
                         <label>End date</label>
                         <div class="ui calendar" id="rangeend">
@@ -107,7 +100,7 @@
         {{ sylius_template_event([event_prefix ~ '.form', 'sylius.admin.create.form'], {'metadata': metadata, 'resource': resource, 'form': form}) }}
 
         {% include '@SyliusUi/Form/Buttons/_create.html.twig' with {'paths': {'cancel': index_url}} %}
-
+        {{ form_row(form._token) }}
         {{ form_end(form, {'render_rest': false}) }}
     </div>
 {% endblock %}
@@ -122,22 +115,23 @@
     {{ parent() }}
 
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
-
     <script type="text/javascript">
+
         $(document).ready(function() {
-            $('.datepicker').calendar({
+            $('#rangestart').calendar({
                 type: 'date',
                 endCalendar: $('#rangeend'),
                 formatter: {
-                    date: 'D/MM/YYYY'
-                },
+                    date : 'YYYY-MM-DD'
+                }
             });
 
             $('#rangeend').calendar({
                 type: 'date',
                 startCalendar: $('#rangestart'),
                 formatter: {
-                    date: 'D/MM/YYYY'
+                    date : 'YYYY-MM-DD'
+                    
                 },
             });
         });

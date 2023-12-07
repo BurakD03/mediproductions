@@ -2,6 +2,7 @@
 
 namespace App\Entity\Licence;
 
+use DateTimeInterface;
 use App\Entity\Order\Order;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -131,9 +132,9 @@ class Licence implements ResourceInterface
     }
 
     #[ORM\PrePersist]
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(): static
     {
-        $this->createdAt = new \DateTimeImmutable();;
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }
