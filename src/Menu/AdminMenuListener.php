@@ -10,6 +10,21 @@ final class AdminMenuListener
     {
         $menu = $event->getMenu();
         // $office = $event->getOffice;
+
+        // MENU - LICENCE
+        $licence = $menu
+            ->addChild('licence')
+            ->setLabel('Manager Licence')
+        ;
+
+        $licence
+            ->addChild('licence', [
+                'route' => 'app_admin_licence_index',
+            ])
+            ->setLabel('Licences')
+        ;
+        
+        // MENU - OFFICE
         $office = $menu
             ->addChild('Office')
             ->setLabel('Custom Admin Office')

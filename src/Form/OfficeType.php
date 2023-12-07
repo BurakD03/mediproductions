@@ -33,7 +33,6 @@ class OfficeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Office::class,
-            'custom_template' => 'office/create.html.twig'
         ]);
     }
 }

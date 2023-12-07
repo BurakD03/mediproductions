@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Order;
 
+use App\Entity\Licence\Licence;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Order as BaseOrder;
 
@@ -15,4 +18,42 @@ use Sylius\Component\Core\Model\Order as BaseOrder;
 #[ORM\Table(name: 'sylius_order')]
 class Order extends BaseOrder
 {
+    #[ORM\OneToMany(mappedBy: 'syliusOrder', targetEntity: Licence::class)]
+    private Collection $licences;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->licences = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Licence>
+     */
+    public function getLicences(): Collection
+    {
+        return $this->licences;
+    }
+
+    public function addLicence(Licence $licence): static
+    {
+        if (!$this->licences->contains($licence)) {
+            $this->licences->add($licence);
+            $licence->setSyliusOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLicence(Licence $licence): static
+    {
+        if ($this->licences->removeElement($licence)) {
+            // set the owning side to null (unless already changed)
+            if ($licence->getSyliusOrder() === $this) {
+                $licence->setSyliusOrder(null);
+            }
+        }
+
+        return $this;
+    }
 }

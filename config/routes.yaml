@@ -2,6 +2,7 @@ sylius_paypal_webhook:
     resource: "@SyliusPayPalPlugin/Resources/config/webhook_routing.yaml"
 
 ################## Office ##################
+### GRID ###
 app_admin_office:
     resource: |
         alias: app.office
@@ -16,7 +17,6 @@ app_admin_office:
                 icon: 'file image outline'
     type: sylius.resource
     prefix: admin
-    
 ### CREATE OFFICE ###
 app_admin_office_create:
     path: /admin/create/office
@@ -25,4 +25,31 @@ app_admin_office_create:
         _sylius:
             section: admin
             template: "@App/templates/office/index.html.twig"
-            permission: true  
+            permission: true
+
+
+################## Licence ##################
+### GRID ###
+app_admin_licence:
+    resource: |
+        alias: app.licence
+        section: admin
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: app_admin_licence
+        vars:
+            all:
+                subheader: app.ui.licence
+            index:
+                icon: 'file image outline'
+    type: sylius.resource
+    prefix: admin
+### CREATE LICENCE ###
+app_admin_licence_create:
+    path: /admin/create/licence
+    defaults:
+        _controller: App\Controller\LicenceController::create
+        _sylius:
+            section: admin
+            # template: "@App/templates/office/index.html.twig"
+            permission: true

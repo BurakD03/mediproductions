@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OfficeController extends ResourceController
 {
@@ -79,8 +78,7 @@ class OfficeController extends ResourceController
             return $this->redirectToRoute('app_admin_office_index');
         }
         
-        return $this->render('office/create.html.twig', [
-            'controller_name' => 'OfficeController',
+        return $this->render('bundles/Mediproductions/Admin/Office/create.html.twig', [
             'configuration' => $configuration,
             'resource' => $newResource,
             'metadata' => $this->metadata,

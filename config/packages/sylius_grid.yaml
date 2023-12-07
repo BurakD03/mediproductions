@@ -12,3 +12,10 @@
 #                 # user:
 #                 #     type: twig
 #                 #     label: sylius.ui.name
+#
+#         app_admin_licence:
+#             driver:
+#                 name: doctrine/orm
+#                 options:
+#                     class: App\Entity\Licence\Licence
+#             fields:

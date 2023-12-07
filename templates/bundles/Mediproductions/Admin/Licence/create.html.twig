@@ -40,30 +40,68 @@
                 {{ form_row(form._token) }}
             {% endif %}
         {% else %}
-            <h1>test</h1>
-            {{ form_widget(form) }}
+            {# {{ form_widget(form) }} #}
             <div class="ui form">
                 <div class="two fields">
                     <div class="field">
-                    <label>Start date</label>
+                        <div class="ui calendar" id="rangestart">
+                            <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            {{ form_widget(form.startedAt, {'attr': {'class': 'datepicker'}}) }}
+                            </div>
+                        </div>
+                    </div> 
+
+                    {# <label>Start date</label>
                     <div class="ui calendar" id="rangestart">
                         <div class="ui input left icon">
                         <i class="calendar icon"></i>
-                        <input type="text" placeholder="Start">
+                        {{ form_widget(form.startedAt) }}
                         </div>
                     </div>
-                    </div>
+                    </div> #}
                     <div class="field">
-                    <label>End date</label>
-                    <div class="ui calendar" id="rangeend">
-                        <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input type="text" placeholder="End">
+                        <label>End date</label>
+                        <div class="ui calendar" id="rangeend">
+                            <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            {{ form_widget(form.endedAt) }}
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
+            <div class="ui grid">
+                <div class="eight wide column">
+                    {{ form_label(form.platform) }}
+                    {{ form_widget(form.platform) }}
+                </div>
+                <div class="eight wide column">
+                    {{ form_label(form.codeCrm, 'Code CRM') }}
+                    {{ form_widget(form.codeCrm) }}
+                </div>
+                <div class="sixteen wide column">
+                    {{ form_label(form.state, 'Status') }}
+                    {{ form_widget(form.state) }}
+
+                    <div class="ui toggle checkbox">
+                        {{ form_widget(form.demo) }}
+                        <label>Demo</label>
+                    </div>
+                </div>
+                <div class="sixteen wide column">
+                    {{ form_label(form.syliusOrder, 'Order Number') }}
+                    {{ form_widget(form.syliusOrder) }}
+                </div> 
+                <div class="sixteen wide column">
+                    {{ form_label(form.syliusProductVariant, 'Product Variant') }}
+                    {{ form_widget(form.syliusProductVariant) }}
+                </div>         
+            </div>
+            {# <div class="field">
+                {{ form_widget(form.state) }}
+            </diV> #}
+        </div>
         {% endif %}
 
         {{ sylius_template_event([event_prefix ~ '.form', 'sylius.admin.create.form'], {'metadata': metadata, 'resource': resource, 'form': form}) }}
@@ -87,14 +125,20 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#rangestart').calendar({
+            $('.datepicker').calendar({
                 type: 'date',
-                endCalendar: $('#rangeend')
+                endCalendar: $('#rangeend'),
+                formatter: {
+                    date: 'D/MM/YYYY'
+                },
             });
 
             $('#rangeend').calendar({
                 type: 'date',
-                startCalendar: $('#rangestart')
+                startCalendar: $('#rangestart'),
+                formatter: {
+                    date: 'D/MM/YYYY'
+                },
             });
         });
     </script>

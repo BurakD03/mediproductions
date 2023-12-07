@@ -257,10 +257,15 @@ sylius_theme:
 ############################# CUSTOM #############################
 ##################################################################
 
-####################### OFFICE #######################
+############## OFFICE ##############
 sylius_resource:
     resources:
         app.office:
             classes:
                 model: App\Entity\Office\Office
                 controller: App\Controller\OfficeController
+############## LICENCE ##############
+        app.licence:
+            classes:
+                model: App\Entity\Licence\Licence
+                controller: App\Controller\LicenceController
