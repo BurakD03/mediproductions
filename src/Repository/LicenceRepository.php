@@ -19,6 +19,17 @@ class LicenceRepository extends EntityRepository
 {
 
 
+    public function findByNamePart(string $phrase, ?int $limit = null): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.codeCrm LIKE :code')
+            ->setParameter('code', '%' . $phrase . '%')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 //    /**
 //     * @return Licence[] Returns an array of Licence objects
 //     */

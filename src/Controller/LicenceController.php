@@ -2,15 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Licence\Licence;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\Resource\ResourceActions;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\BrowserKit\AbstractBrowser;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 
 class LicenceController extends ResourceController
 {
+
     #[Route('/admin/create/licence', name: 'app_create_licence')]
     public function create(Request $request): Response
     {
@@ -36,7 +43,8 @@ class LicenceController extends ResourceController
             $newResource->setUpdatedAt(new \DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($newResource);
-            // dd($form->getData());
+            // dd($newResource);
+            
             $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::CREATE, $configuration, $newResource);
 
             if ($event->isStopped() && !$configuration->isHtmlRequest()) {
@@ -95,4 +103,33 @@ class LicenceController extends ResourceController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @When I look for a variant with :phrase in descriptor within the :product product
+     */
+    // public function getLicenceCodeCrm(HttpClientInterface $httpClient, $phrase = '1')
+    public function getLicenceCodeCrm(HttpClientInterface $httpClient)
+    {
+
+        // $response = $httpClient->request(
+        //     'GET',
+        //     'http://localhost:8000/admin/order/search/admin/order/search',
+        //     [
+        //         'headers' => [
+        //             'ACCEPT' => 'application/json',
+        //             // 'Cookie' => $cookie->getName() . '=' . $cookie->getValue(),
+        //         ],
+        //         'query' => [
+        //             'phrase' => $phrase,
+        //             // 'codeCr' => $product->getCode(),
+        //         ],
+        //     ]
+        // );
+
+        // $response = new JsonResponse($response);
+        // $content = $response->getContent();
+        // $data = json_decode($content, true);
+        // return new JsonResponse($data);
+    }
+
 }

@@ -6,33 +6,24 @@ use App\Entity\Order\Order;
 use App\Entity\Licence\Licence;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Form\AbstractType;
+use App\Form\Type\OrderAutocompleteChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Sylius\Bundle\ResourceBundle\Form\Type\ResourceAutocompleteChoiceType;
 
 class LicenceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('startedAt',  TextType::class, [
-            //     'attr' => [
-            //         'placeholder' => 'Start',
-            //     ]
-            // ])
-            // ->add('endedAt',  TextType::class, [
-            //     'attr' => [
-            //         'placeholder' => 'End',
-            //     ]
-            // ])
             ->add('startedAt',  DateType::class, [
                 'widget' => 'single_text',
                 'attr' => [
                     'placeholder' => 'Start',
-                    // 'type' => 'text'
                 ]
             ])
             ->add('endedAt',  DateType::class, [
@@ -55,16 +46,30 @@ class LicenceType extends AbstractType
                 ],
             ])
             ->add('codeCrm')
-            // ->add('createdAt')
-            // ->add('updatedAt')
-            ->add('syliusOrder', EntityType::class, [
-                'class' => Order::class,
-                'choice_label' => 'number',
-                'by_reference' => true,
-                'disabled' => true
+            ->add('syliusOrder', OrderAutocompleteChoiceType::class, [
+            // 'class' => Order::class,
+            // 'choice_label' => 'number',
+            // 'placeholder' => 'Choose an order',
+            'label' => 'App\Entity\Licence\Licence',
+                'resource' => 'app.licence',
+                'choice_name' => 'codeCrm',
+                'choice_value' => 'id',
+                'attr' => [
+                    'class' => 'ui search dropdown', // Ajoutez la classe CSS pour Semantic UI dropdown
+                ],
             ])
             ->add('syliusProductVariant')
         ;
+
+        // $builder
+        //     ->get('customer')->addModelTransformer(
+        //     new ReversedTransformer(
+        //         new ResourceToIdentifierTransformer($this->customerRepository, 'id')
+        //     )
+        //  )->addModelTransformer(
+        //      new ResourceToIdentifierTransformer($this->customerRepository, 'id')
+        //  );
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void

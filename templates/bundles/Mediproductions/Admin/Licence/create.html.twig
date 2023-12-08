@@ -83,8 +83,41 @@
                     </div>
                 </div>
                 <div class="sixteen wide column">
-                    {{ form_label(form.syliusOrder, 'Order Number') }}
-                    {{ form_widget(form.syliusOrder) }}
+                    {# {{ form_label(form.syliusOrder, 'Order Number') }}
+                    {{ form_widget(form.syliusOrder) }} #}
+
+{# {{ form_row(form.syliusOrder, {'remote_url': path('app_admin_ajax_order_by_name_phrase'), 'load_edit_url': '' }) }} #}
+
+    <div class="required field">
+        {{- form_label(form) -}}
+        <div
+            class="sylius-autocomplete ui fluid search selection dropdown"
+            {# data-url="{{ remote_url }}"
+            data-choice-name="{{ choice_name }}"
+            data-choice-value="{{ choice_value }}"
+            data-criteria-type="{{ remote_criteria_type }}"
+            data-criteria-name="{{ remote_criteria_name }}"
+            data-load-edit-url="{{ load_edit_url }}" #}
+
+            data-url="/admin/order/search"
+            data-choice-name="number"
+            data-choice-value="id"
+            {# data-criteria-type="{{ remote_criteria_type }}"
+            data-criteria-name="{{ remote_criteria_name }}"
+            data-load-edit-url="{{ load_edit_url }}" #}
+
+        >
+            {{- form_widget(form.syliusOrder, {'attr': {'class' : 'autocomplete'}}) -}}
+            <i class="dropdown icon"></i>
+            <div class="default text">{% if placeholder is defined %} {{ placeholder|trans }} {% endif %}</div>
+            <div class="menu"></div>
+        </div>
+        {{- form_errors(form) -}}
+    </div>
+
+{# {{ dump (form_row(form.syliusOrder)) }} #}
+
+
                 </div> 
                 <div class="sixteen wide column">
                     {{ form_label(form.syliusProductVariant, 'Product Variant') }}
@@ -116,6 +149,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
     <script type="text/javascript">
+
+    $('.ui.search.dropdown').dropdown();
 
         $(document).ready(function() {
             $('#rangestart').calendar({

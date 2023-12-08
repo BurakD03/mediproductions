@@ -269,3 +269,4 @@ sylius_resource:
             classes:
                 model: App\Entity\Licence\Licence
                 controller: App\Controller\LicenceController
+                repository: App\Repository\LicenceRepository

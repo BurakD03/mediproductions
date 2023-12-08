@@ -53,3 +53,18 @@ app_admin_licence_create:
             section: admin
             # template: "@App/templates/office/index.html.twig"
             permission: true
+
+app_admin_ajax_order_by_name_phrase:
+    path: /admin/order/search
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\LicenceController::getLicenceCodeCrm
+        _format: json
+        _sylius:
+            serialization_groups: AutoComplete
+            permission: true
+            repository:
+                method: findByNamePart
+                arguments:
+                    phrase: '1'
+                    limit: 25
