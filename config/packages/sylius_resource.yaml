@@ -10,7 +10,7 @@ sylius_resource:
         
         ############## Licence ##############
         app.licence:
-            driver: doctrine/orm # You can use also different driver here
+            driver: doctrine/orm
             classes:
                 model: App\Entity\Licence\Licence
                 repository: App\Repository\LicenceRepository

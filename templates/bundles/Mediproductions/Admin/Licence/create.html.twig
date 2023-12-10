@@ -83,10 +83,21 @@
                     </div>
                 </div>
                 <div class="sixteen wide column">
-                    {# {{ form_label(form.syliusOrder, 'Order Number') }}
-                    {{ form_widget(form.syliusOrder) }} #}
+                    {{ form_label(form.syliusOrder, 'Order Number') }}
+                    {{ form_widget(form.syliusOrder) }}
+
+
 
 {# {{ form_row(form.syliusOrder, {'remote_url': path('app_admin_ajax_order_by_name_phrase'), 'load_edit_url': '' }) }} #}
+
+
+{# {{ dump (form_row(form.syliusOrder)) }} #}
+
+
+                </div> 
+                <div class="sixteen wide column">
+                    {# {{ form_label(form.syliusProductVariant, 'Product Variant') }}
+                    {{ form_widget(form.syliusProductVariant) }} #}
 
     <div class="required field">
         {{- form_label(form) -}}
@@ -100,14 +111,15 @@
             data-load-edit-url="{{ load_edit_url }}" #}
 
             data-url="/admin/order/search"
-            data-choice-name="number"
-            data-choice-value="id"
+            data-choice-name="code"
+            data-choice-value="code"
+            data-criteria-type="contains"
+            data-criteria-name="phrase"
             {# data-criteria-type="{{ remote_criteria_type }}"
-            data-criteria-name="{{ remote_criteria_name }}"
             data-load-edit-url="{{ load_edit_url }}" #}
 
         >
-            {{- form_widget(form.syliusOrder, {'attr': {'class' : 'autocomplete'}}) -}}
+            {# {{- form_widget(form.syliusProductVariant, {'attr': {'class' : 'autocomplete'}}) -}} #}
             <i class="dropdown icon"></i>
             <div class="default text">{% if placeholder is defined %} {{ placeholder|trans }} {% endif %}</div>
             <div class="menu"></div>
@@ -115,13 +127,26 @@
         {{- form_errors(form) -}}
     </div>
 
-{# {{ dump (form_row(form.syliusOrder)) }} #}
+    <h3 class="ui top attached header">{{ 'sylius.ui.taxonomy'|trans }}</h3>
+
+    <div class="ui attached segment">
+        Taxonomy
+
+        <h4>{{ 'sylius.ui.product_taxon'|trans }}</h4>
+        <div id="sylius-product-taxonomy-tree"
+             data-tree-root-nodes-url="{{ path('sylius_admin_ajax_taxon_root_nodes') }}"
+             data-tree-leafs-url="{{ path('sylius_admin_ajax_taxon_leafs') }}"
+        >
+            {{ form_widget(form.syliusProductVariant) }}
+            <div class="ui inverted dimmer">
+                <div class="ui loader"></div>
+            </div>
+        </div>
+
+        {# {{ sylius_template_event(['sylius.admin.product.' ~ action ~ '.tab_taxonomy', 'sylius.admin.product.tab_taxonomy'], {'form': form}) }} #}
+    </div>
 
 
-                </div> 
-                <div class="sixteen wide column">
-                    {{ form_label(form.syliusProductVariant, 'Product Variant') }}
-                    {{ form_widget(form.syliusProductVariant) }}
                 </div>         
             </div>
             {# <div class="field">

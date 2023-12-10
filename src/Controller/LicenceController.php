@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Licence\Licence;
+use App\Repository\LicenceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\Resource\ResourceActions;
@@ -13,11 +15,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 
 class LicenceController extends ResourceController
 {
 
+    // public function __construct(
+    //     private AbstractBrowser $clientt,
+    //     private RequestStack $requestStack,
+    //     EntityManagerInterface $em,
+    // ) {
+    // }
+    
     #[Route('/admin/create/licence', name: 'app_create_licence')]
     public function create(Request $request): Response
     {
@@ -104,32 +115,35 @@ class LicenceController extends ResourceController
         ]);
     }
 
+
     /**
      * @When I look for a variant with :phrase in descriptor within the :product product
      */
-    // public function getLicenceCodeCrm(HttpClientInterface $httpClient, $phrase = '1')
-    public function getLicenceCodeCrm(HttpClientInterface $httpClient)
+    #[Route('/admin/create/licence', name: 'app_create_licence', defaults: ['phrase' => '1'])]
+    public function getLicenceCodeCrm($phrase, AbstractBrowser $clientt, RequestStack $requestStack): void
     {
-
-        // $response = $httpClient->request(
-        //     'GET',
-        //     'http://localhost:8000/admin/order/search/admin/order/search',
-        //     [
-        //         'headers' => [
-        //             'ACCEPT' => 'application/json',
-        //             // 'Cookie' => $cookie->getName() . '=' . $cookie->getValue(),
-        //         ],
-        //         'query' => [
-        //             'phrase' => $phrase,
-        //             // 'codeCr' => $product->getCode(),
-        //         ],
-        //     ]
-        // );
-
-        // $response = new JsonResponse($response);
-        // $content = $response->getContent();
-        // $data = json_decode($content, true);
-        // return new JsonResponse($data);
+        $clientt->getCookieJar()->set(new Cookie($requestStack->getSession()->getName(), $requestStack->getSession()->getId()));
+        $clientt->request(
+            'GET',
+            '/admin/order/search',
+            ['phrase' => $phrase],
+            [],
+            ['ACCEPT' => 'application/json'],
+        );
     }
+    // public function getLicenceCodeCrm(Request $request)
+    // {
+    //     // $repo = $this->get('App\Repository\LicenceRepository');
+    //     $repo = $em->getRepository(Licence::class);
+    //     $criteria = $request->query->get('phrase');
+    //     $q = $criteria['search']['value'];
 
+    //     $items = $repo->findByNamePart($q);
+
+    //     return new JsonResponse([
+    //         '_embedded' => [
+    //             'items' => $items,
+    //         ]
+    //     ]);
+    // }
 }

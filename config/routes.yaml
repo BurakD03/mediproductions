@@ -61,10 +61,10 @@ app_admin_ajax_order_by_name_phrase:
         _controller: App\Controller\LicenceController::getLicenceCodeCrm
         _format: json
         _sylius:
-            serialization_groups: AutoComplete
+            serialization_groups: [Autocomplete]
             permission: true
             repository:
                 method: findByNamePart
                 arguments:
-                    phrase: '1'
+                    phrase: $phrase
                     limit: 25

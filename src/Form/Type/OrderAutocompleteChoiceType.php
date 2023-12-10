@@ -25,8 +25,8 @@ final class OrderAutocompleteChoiceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'resource' => 'app.licence',
-            'choice_name' => 'codeCrm',
+            'resource' => 'sylius.product_variant',
+            'choice_name' => 'code',
             'choice_value' => 'id',
         ]);
     }

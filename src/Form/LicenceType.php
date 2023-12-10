@@ -45,20 +45,24 @@ class LicenceType extends AbstractType
                     'Completed' => 'Completed',
                 ],
             ])
+            // ->add('codeCrm')
             ->add('codeCrm')
-            ->add('syliusOrder', OrderAutocompleteChoiceType::class, [
-            // 'class' => Order::class,
-            // 'choice_label' => 'number',
-            // 'placeholder' => 'Choose an order',
-            'label' => 'App\Entity\Licence\Licence',
-                'resource' => 'app.licence',
-                'choice_name' => 'codeCrm',
-                'choice_value' => 'id',
-                'attr' => [
-                    'class' => 'ui search dropdown', // Ajoutez la classe CSS pour Semantic UI dropdown
-                ],
+            ->add('syliusOrder',EntityType::class, [
+                'class' => Order::class,
+                'choice_label' => 'number'
             ])
-            ->add('syliusProductVariant')
+            ->add('syliusProductVariant', OrderAutocompleteChoiceType::class, [
+                // 'class' => Order::class,
+                // 'choice_label' => 'number',
+                // 'placeholder' => 'Choose an order',
+                    // 'label' => 'App\Entity\Licence\Licence',
+                    'resource' => 'app.licence',
+                    'choice_name' => 'code',
+                    'choice_value' => 'id',
+                    'attr' => [
+                        'class' => 'ui search dropdown', // Ajoutez la classe CSS pour Semantic UI dropdown
+                    ],
+            ])
         ;
 
         // $builder

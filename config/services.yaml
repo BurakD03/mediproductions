@@ -45,10 +45,15 @@ services:
         class: App\Menu\AdminMenuListener
         tags:
             - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
-
+## CONTROLLER ##
     App\Controller\OfficeController:
         autowire: false
 
 ########################## LICENCE ##########################
 
-##  ADMIN  ##
+    ##  CONTROLLER  ##
+    App\Controller\LicenceController:
+        autowire: false
+        public: true
+    # App\Repository\LicenceRepository:
+    #     public: true
