@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Licence\Licence;
@@ -14,11 +16,13 @@ use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 
+#[AsController]
 class LicenceController extends ResourceController
 {
 
@@ -120,7 +124,7 @@ class LicenceController extends ResourceController
      * @When I look for a variant with :phrase in descriptor within the :product product
      */
     #[Route('/admin/create/licence', name: 'app_create_licence', defaults: ['phrase' => '1'])]
-    public function getLicenceCodeCrm($phrase, AbstractBrowser $clientt, RequestStack $requestStack): void
+    public function getLicenceCodeCrm($phrase,AbstractBrowser $clientt, RequestStack $requestStack): void
     {
         $clientt->getCookieJar()->set(new Cookie($requestStack->getSession()->getName(), $requestStack->getSession()->getId()));
         $clientt->request(

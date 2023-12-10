@@ -55,5 +55,6 @@ services:
     App\Controller\LicenceController:
         autowire: false
         public: true
+        tags: ['controller.service_arguments']
     # App\Repository\LicenceRepository:
     #     public: true
