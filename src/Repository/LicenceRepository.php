@@ -19,9 +19,10 @@ class LicenceRepository extends EntityRepository
 {
 
 
-    public function findByNamePart(string $codeCrm, ?int $limit = null): array
+    public function findByNamePart(string $codeCrm, ?int $limit = 2): array
     {
         return $this->createQueryBuilder('o')
+            ->select('o.codeCrm')
             ->andWhere('o.codeCrm LIKE :code')
             ->setParameter('code', '%' . $codeCrm . '%')
             ->setMaxResults($limit)
@@ -29,6 +30,18 @@ class LicenceRepository extends EntityRepository
             ->getResult();
     }
 
+
+    // public function findAllProductVariant(string $codeCrm, ?int $limit = 2): array
+    // {
+    //     return $this->createQueryBuilder('o')
+    //         ->select('o.codeCrm')
+    //         ->from('App\Entity\NomDeVotreEntite', 'alias') // Remplacez "NomDeVotreEntite" par le nom réel de votre entité
+    //         ->andWhere('alias.codeCrm LIKE :code')
+    //         ->setParameter('code', '%' . $codeCrm . '%')
+    //         ->setMaxResults($limit)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
 
 //    /**
 //     * @return Licence[] Returns an array of Licence objects

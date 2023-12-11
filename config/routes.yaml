@@ -53,7 +53,7 @@ app_admin_licence_create:
             section: admin
             # template: "@App/templates/office/index.html.twig"
             permission: true
-
+# AJAX QUERY FOR FIELD SELECT DROPDOWN
 app_admin_ajax_order_by_name_phrase:
     path: /admin/order/search
     methods: [GET]
@@ -65,6 +65,6 @@ app_admin_ajax_order_by_name_phrase:
             permission: true
             repository:
                 method: findByNamePart
-                arguments:
-                    phrase: $phrase
-                    limit: 25
+                # arguments:
+                #     phrase: $phrase
+                #     limit: 5

@@ -22,17 +22,20 @@ class LicenceType extends AbstractType
         $builder
             ->add('startedAt',  DateType::class, [
                 'widget' => 'single_text',
+                'required'   => true,
                 'attr' => [
                     'placeholder' => 'Start',
                 ]
             ])
             ->add('endedAt',  DateType::class, [
                 'widget' => 'single_text',
+                'required'   => true,
                 'attr' => [
                     'placeholder' => 'End',
                 ]
             ])
             ->add('platform',  ChoiceType::class, [
+                'required'   => true,
                 'choices'  => [
                     'CRM' => 'CRM',
                     'Shop' => 'Shop',
@@ -51,28 +54,17 @@ class LicenceType extends AbstractType
                 'class' => Order::class,
                 'choice_label' => 'number'
             ])
-            ->add('syliusProductVariant', OrderAutocompleteChoiceType::class, [
-                // 'class' => Order::class,
-                // 'choice_label' => 'number',
-                // 'placeholder' => 'Choose an order',
-                    // 'label' => 'App\Entity\Licence\Licence',
-                    'resource' => 'app.licence',
-                    'choice_name' => 'code',
-                    'choice_value' => 'id',
-                    'attr' => [
-                        'class' => 'ui search dropdown', // Ajoutez la classe CSS pour Semantic UI dropdown
-                    ],
-            ])
-        ;
+            ->add('syliusProductVariant')
 
-        // $builder
-        //     ->get('customer')->addModelTransformer(
-        //     new ReversedTransformer(
-        //         new ResourceToIdentifierTransformer($this->customerRepository, 'id')
-        //     )
-        //  )->addModelTransformer(
-        //      new ResourceToIdentifierTransformer($this->customerRepository, 'id')
-        //  );
+            // ->add('syliusProductVariant', OrderAutocompleteChoiceType::class, [
+            //     'resource' => 'app.licence',
+            //     'choice_name' => 'code',
+            //     'choice_value' => 'id',
+            //     'attr' => [
+            //         'class' => 'ui search dropdown', // Ajoutez la classe CSS pour Semantic UI dropdown
+            //     ],
+            // ])
+        ;
         
     }
 

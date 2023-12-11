@@ -270,3 +270,9 @@ sylius_resource:
                 model: App\Entity\Licence\Licence
                 controller: App\Controller\LicenceController
                 repository: App\Repository\LicenceRepository
+
+ ############## SYLIUS PRODUCT ##############       
+        app.product:
+            classes:
+                model: App\Entity\Product\Product
+                repository: App\Repository\Sylius\Product\ProductRepository

@@ -19,11 +19,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 
 #[AsController]
-class LicenceController extends ResourceController
+class LicenceController extends ResourceController  
 {
 
     // public function __construct(
@@ -51,6 +52,15 @@ class LicenceController extends ResourceController
         //     $entityManager->persist($newResource);
         //     dd($form->getData());
         // }
+
+        // $criteria = $request->query->get('phrase');
+        // echo $criteria ;
+        // $items = $this->container->get('app.repository.licence')->findByNamePart($criteria);
+
+        // Appeler l'action getLicenceCodeCrm pour récupérer les données
+        // $ajaxJson = $this->getLicenceCodeCrm($request);
+        // $data = json_decode($ajaxJson->getContent(), true);
+        // $items = $data['_embedded']['items'];
 
         if ($request->isMethod('POST') && $form->isSubmitted() && $form->isValid()) {
             $newResource = $form->getData();
@@ -116,38 +126,33 @@ class LicenceController extends ResourceController
             'resource' => $newResource,
             'metadata' => $this->metadata,
             'form' => $form->createView(),
+            // 'codeCrm' => $items,
         ]);
     }
 
 
-    /**
-     * @When I look for a variant with :phrase in descriptor within the :product product
-     */
-    #[Route('/admin/create/licence', name: 'app_create_licence', defaults: ['phrase' => '1'])]
-    public function getLicenceCodeCrm($phrase,AbstractBrowser $clientt, RequestStack $requestStack): void
+    public function getLicenceCodeCrm(Request $request)
     {
-        $clientt->getCookieJar()->set(new Cookie($requestStack->getSession()->getName(), $requestStack->getSession()->getId()));
-        $clientt->request(
-            'GET',
-            '/admin/order/search',
-            ['phrase' => $phrase],
-            [],
-            ['ACCEPT' => 'application/json'],
-        );
+        
+        $criteria = $request->query->get('phrase','');
+        // echo $criteria ;
+        
+        // $items = $this->container->get('app.repository.licence')->findByNamePart($criteria, 5);
+        $items = $this->container->get('app.repository.product')->findByNameProductVariant($criteria,'fr_FR');
+        // dd($items);
+        $responseArray = [
+            'success' => true,
+            'results' => [],
+        ];
+        foreach ($items as $item) {
+            $responseArray['results'][] = [
+                'name' => $item['code'], // Remplacez par le nom réel de votre propriété dans l'entité Licence
+                'value' => $item['code'], // Remplacez par la valeur réelle de votre propriété dans l'entité Licence
+                'text' => $item['code'], // Remplacez par le texte réel de votre propriété dans l'entité Licence
+            ];
+        }
+
+        return new JsonResponse($responseArray);
+
     }
-    // public function getLicenceCodeCrm(Request $request)
-    // {
-    //     // $repo = $this->get('App\Repository\LicenceRepository');
-    //     $repo = $em->getRepository(Licence::class);
-    //     $criteria = $request->query->get('phrase');
-    //     $q = $criteria['search']['value'];
-
-    //     $items = $repo->findByNamePart($q);
-
-    //     return new JsonResponse([
-    //         '_embedded' => [
-    //             'items' => $items,
-    //         ]
-    //     ]);
-    // }
 }

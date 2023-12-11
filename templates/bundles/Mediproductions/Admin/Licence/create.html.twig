@@ -44,7 +44,7 @@
             <div class="ui form">
             {{ form_errors(form) }}
                 <div class="two fields">
-                    <div class="field">
+                    <div class="required field">
                         <label>Start date</label>
                         <div class="ui calendar" id="rangestart">
                             <div class="ui input left icon">
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="field">
+                    <div class="required field">
                         <label>End date</label>
                         <div class="ui calendar" id="rangeend">
                             <div class="ui input left icon">
@@ -85,66 +85,22 @@
                 <div class="sixteen wide column">
                     {{ form_label(form.syliusOrder, 'Order Number') }}
                     {{ form_widget(form.syliusOrder) }}
-
-
-
-{# {{ form_row(form.syliusOrder, {'remote_url': path('app_admin_ajax_order_by_name_phrase'), 'load_edit_url': '' }) }} #}
-
-
-{# {{ dump (form_row(form.syliusOrder)) }} #}
-
-
                 </div> 
                 <div class="sixteen wide column">
                     {# {{ form_label(form.syliusProductVariant, 'Product Variant') }}
                     {{ form_widget(form.syliusProductVariant) }} #}
 
-    <div class="required field">
-        {{- form_label(form) -}}
-        <div
-            class="sylius-autocomplete ui fluid search selection dropdown"
-            {# data-url="{{ remote_url }}"
-            data-choice-name="{{ choice_name }}"
-            data-choice-value="{{ choice_value }}"
-            data-criteria-type="{{ remote_criteria_type }}"
-            data-criteria-name="{{ remote_criteria_name }}"
-            data-load-edit-url="{{ load_edit_url }}" #}
 
-            data-url="/admin/order/search"
-            data-choice-name="code"
-            data-choice-value="code"
-            data-criteria-type="contains"
-            data-criteria-name="phrase"
-            {# data-criteria-type="{{ remote_criteria_type }}"
-            data-load-edit-url="{{ load_edit_url }}" #}
 
-        >
-            {# {{- form_widget(form.syliusProductVariant, {'attr': {'class' : 'autocomplete'}}) -}} #}
-            <i class="dropdown icon"></i>
-            <div class="default text">{% if placeholder is defined %} {{ placeholder|trans }} {% endif %}</div>
-            <div class="menu"></div>
-        </div>
-        {{- form_errors(form) -}}
-    </div>
-
-    <h3 class="ui top attached header">{{ 'sylius.ui.taxonomy'|trans }}</h3>
-
-    <div class="ui attached segment">
-        Taxonomy
-
-        <h4>{{ 'sylius.ui.product_taxon'|trans }}</h4>
-        <div id="sylius-product-taxonomy-tree"
-             data-tree-root-nodes-url="{{ path('sylius_admin_ajax_taxon_root_nodes') }}"
-             data-tree-leafs-url="{{ path('sylius_admin_ajax_taxon_leafs') }}"
-        >
-            {{ form_widget(form.syliusProductVariant) }}
-            <div class="ui inverted dimmer">
-                <div class="ui loader"></div>
+            <div class="">
+                {{ form_label(form.syliusProductVariant, 'Product Variant') }}
+                <div class="ui fluid search selection dropdown">
+                <input type="hidden"  id="licence_syliusProductVariant" name="licence[syliusProductVariant]" class="noselection">
+                {# {{ form_widget(form.syliusProductVariant) }} #}
+                <div class="default text">{{ form_label(form.syliusProductVariant, 'Product Variant') }}</div>
+                <i class="dropdown icon"></i>
+                <div class="menu"></div>
             </div>
-        </div>
-
-        {# {{ sylius_template_event(['sylius.admin.product.' ~ action ~ '.tab_taxonomy', 'sylius.admin.product.tab_taxonomy'], {'form': form}) }} #}
-    </div>
 
 
                 </div>         
@@ -175,7 +131,7 @@
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
     <script type="text/javascript">
 
-    $('.ui.search.dropdown').dropdown();
+
 
         $(document).ready(function() {
             $('#rangestart').calendar({
@@ -193,6 +149,14 @@
                     date : 'YYYY-MM-DD'
                     
                 },
+            });
+            // SEMANTIC UI - SELECT DROPDOWN
+            $('.ui.search.dropdown').dropdown({
+                apiSettings: {
+                url: '/admin/order/search?phrase={query}'
+                },
+                filterRemoteData: true,
+                maxSelections: 5
             });
         });
     </script>
