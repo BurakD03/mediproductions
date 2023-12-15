@@ -7,6 +7,7 @@ namespace App\Entity\Product;
 use App\Entity\Licence\Licence;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\ProductVariant as BaseProductVariant;
 use Sylius\Component\Product\Model\ProductVariantTranslationInterface;
@@ -21,6 +22,12 @@ class ProductVariant extends BaseProductVariant
 {
     #[ORM\OneToMany(mappedBy: 'syliusProductVariant', targetEntity: Licence::class)]
     private Collection $licences;
+
+    #[ORM\Column]
+    private ?int $durationValue = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $durationUnit = null;
 
     public function __construct()
     {
@@ -62,4 +69,29 @@ class ProductVariant extends BaseProductVariant
 
         return $this;
     }
+
+    public function getDurationValue(): ?int
+    {
+        return $this->durationValue;
+    }
+
+    public function setDurationValue(int $durationValue): static
+    {
+        $this->durationValue = $durationValue;
+
+        return $this;
+    }
+
+    public function getDurationUnit(): ?string
+    {
+        return $this->durationUnit;
+    }
+
+    public function setDurationUnit(string $durationUnit): static
+    {
+        $this->durationUnit = $durationUnit;
+
+        return $this;
+    }
+
 }

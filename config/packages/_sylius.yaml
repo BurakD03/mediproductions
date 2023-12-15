@@ -133,6 +133,8 @@ sylius_product:
         product:
             classes:
                 model: App\Entity\Product\Product
+                ### OVERRIDE SYLIUS PRODUCT REPO - MEDIPRODUCTIONS
+                repository: App\Repository\Sylius\Product\ProductRepository
             translation:
                 classes:
                     model: App\Entity\Product\ProductTranslation
@@ -272,7 +274,7 @@ sylius_resource:
                 repository: App\Repository\LicenceRepository
 
  ############## SYLIUS PRODUCT ##############       
-        app.product:
-            classes:
-                model: App\Entity\Product\Product
-                repository: App\Repository\Sylius\Product\ProductRepository
+        # app.product:
+        #     classes:
+        #         model: App\Entity\Product\Product
+        #         repository: App\Repository\Sylius\Product\ProductRepository

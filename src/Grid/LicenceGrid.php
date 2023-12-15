@@ -49,6 +49,12 @@ final class LicenceGrid extends AbstractGrid implements ResourceAwareGridInterfa
             ->addFilter(
                 DateFilter::create('endedAt')
             )
+            // ->addFilter(
+            //     DateRangeFilter::create('dateRange', 'startedAt', 'endedAt')
+            //         ->setFormat('yyyy-MM-dd') // Format de la date
+            //         ->setLabel('Date Range') // Libellé du filtre
+            //         // Autres options du filtre si nécessaire
+            // )
 
     
             // see https://github.com/Sylius/SyliusGridBundle/blob/master/docs/field_types.md

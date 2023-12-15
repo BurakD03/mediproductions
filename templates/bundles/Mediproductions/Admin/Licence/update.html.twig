@@ -1,0 +1,230 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% set header = configuration.vars.header|default(metadata.applicationName~'.ui.edit_'~metadata.name) %}
+{% set event_prefix = metadata.applicationName ~ '.admin.' ~ metadata.name ~ '.update' %}
+
+{% block title %}{{ header|trans }} {{ parent() }}{% endblock %}
+
+{% form_theme form '@SyliusAdmin/Form/theme.html.twig' %}
+
+{% block content %}
+    {# {{ sylius_template_event([event_prefix, 'sylius.admin.update'], _context) }} #}
+{% set index_url = path(
+        configuration.vars.index.route.name|default(configuration.getRouteName('index')),
+        configuration.vars.index.route.parameters|default(configuration.vars.route.parameters|default({}))
+    )
+%}
+
+{############ HEADER - BREADCRUMB ############}
+<div class="ui stackable two column grid">
+    <div class="column">
+        {% include configuration.vars.templates.header_title|default('@SyliusAdmin/Crud/Update/_headerTitle.html.twig') %}
+        {% include configuration.vars.templates.breadcrumb|default('@SyliusAdmin/Crud/Update/_breadcrumb.html.twig') %}
+
+        {{ sylius_template_event([event_prefix ~ '.header', 'sylius.admin.update.header'], {'metadata': metadata, 'resource': resource}) }}
+    </div>
+    <div class="middle aligned column">
+        {% include configuration.vars.templates.toolbar|default('@SyliusAdmin/Crud/_toolbar.html.twig') ignore missing %}
+    </div>
+</div>
+
+{# FORMULAIRE UPDATE #}
+<div class="ui segment">
+    {{ form_start(form, {'action': path(configuration.vars.route.name|default(configuration.getRouteName('update')), configuration.vars.route.parameters|default({ 'id': resource.id })), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+    <input type="hidden" name="_method" value="PUT" />
+    {% include '@SyliusAdmin/Crud/form_validation_errors_checker.html.twig' %}
+    {% if configuration.vars.templates.form is defined %}
+        {% include configuration.vars.templates.form %}
+        {% if not form._token.isRendered %}
+            {{ form_row(form._token) }}
+        {% endif %}
+    {% else %}
+
+        <div class="ui form">
+        {{ form_errors(form) }}
+        {{dump(resource.syliusProductVariant)}}
+        {{dump(form.syliusProductVariant)}}
+            <div class="field">
+                {{ form_label(form.syliusProductVariant, 'Product Variant') }}
+                <div class="ui fluid search selection dropdown">
+                    <input type="hidden"  id="licence_syliusProductVariant" name="licence[syliusProductVariant]" class="noselection" >
+                    {# {{ form_widget(form.syliusProductVariant) }} #}
+                    <div class="text">{{ label }}</div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu"></div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="required field">
+                    <label>Start date</label>
+                    <div class="ui calendar" id="rangestart">
+                        <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        {{ form_widget(form.startedAt) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="required field">
+                    <label>End date</label>
+                    <div class="ui calendar" id="rangeend">
+                        <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        {{ form_widget(form.endedAt) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui grid">
+            <div class="eight wide column field required">
+                {{ form_label(form.platform, 'Platform') }}
+                {{ form_widget(form.platform) }}
+            </div>
+            <div class="eight wide column">
+                {{ form_row(form.codeCrm, { 'label': 'Code CRM' }) }}
+            </div>
+            <div class="sixteen wide column">
+                {{ form_label(form.state, 'Status') }}
+                {{ form_widget(form.state) }}
+
+                <div class="ui toggle checkbox">
+                    {{ form_row(form.demo) }}
+                </div>
+            </div>
+            <div class="sixteen wide column">
+                {{ form_row(form.syliusOrder, { 'label':'Order Number'}) }}
+                {# {{ form_widget(form.syliusOrder) }} #}
+            </div>       
+        </div>
+
+    {% endif %}
+    {{ sylius_template_event([event_prefix ~ '.form', 'sylius.admin.update.form'], {'metadata': metadata, 'resource': resource, 'form': form}) }}
+
+    {% include '@SyliusUi/Form/Buttons/_update.html.twig' with {'paths': {'cancel': sylius_generate_redirect_path(index_url)}} %}
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {# {{ sylius_template_event([event_prefix ~ '.stylesheets', 'sylius.admin.update.stylesheets'], { 'metadata': metadata }) }} #}
+    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            // SI CHANGEMENT DE DATE DEPUIS CALENDAR DATE DEBUT
+            var startedAtOnChange;
+
+            $('#rangestart').calendar({
+                {% if app.request.attributes.get('_controller') == 'App\\Controller\\LicenceController::create' %}
+                initialDate: new Date(),
+                {% endif %}
+                type: 'date',
+                endCalendar: $('#rangeend'),
+                formatter: {
+                    date : 'YYYY-MM-DD'
+                },
+                onChange: function(value, text, $selectedItem) {
+                    // Stocker la date sélectionnée dans la variable $dateDateDeb
+                    startedAtOnChange = value;
+                    console.log('startedAtOnChange = ' + startedAtOnChange )
+                }
+
+            });
+
+            $('#rangeend').calendar({
+                type: 'date',
+                startCalendar: $('#rangestart'),
+                formatter: {
+                    date : 'YYYY-MM-DD'
+                },
+                
+
+                
+            });
+            {% if app.request.attributes.get('_controller') == 'App\\Controller\\LicenceController::update' %}
+            // Récupére la date pré-remplie depuis #rangestart (DATE DEBUT)
+            var initialStartDate = $('#rangestart').calendar('get date', true);
+            {% endif %}
+            // SEMANTIC UI - SELECT DROPDOWN
+            $('.ui.search.dropdown').dropdown({
+                apiSettings: {
+                    url: '/admin/order/search?phrase={query}'
+                },
+                filterRemoteData: true,
+                cache: false,
+                onChange: function(value, name, text, $selectedItem) {
+                    // récupération de la partie numérique et l'unité du texte
+                    var match = name.match(/(\d+)\s*(\w+)/);
+                    //si date existe
+                    if (match) {
+                        var numericPart = match[1];
+                        var unit = match[2];
+                        //console.log(numericPart);
+                        //console.log(unit);
+                        
+                        // Utilise la date pré-remplie s'il y en a une, sinon récupére la date #rangestart (DATE DEBUT)
+                        var startDate = startedAtOnChange || initialStartDate;
+                        //console.log('startedAtOnChange = ' + startedAtOnChange)
+                        //console.log('initialStartDate = ' + initialStartDate)
+
+                        // Utiliser la date stockée dans $dateDateDeb si elle est définie
+                        var newDate = calculateNewDate(parseInt(numericPart), unit, startDate)
+
+                        // Formater la nouvelle date comme 'YYYY-MM-DD'
+                        var formattedDate = formatDate(newDate);
+
+                        // Mis à jour la date de fin
+                        $('.ui.calendar').calendar('set endDate', formattedDate);
+                    } else {
+                        console.error('Invalid duration format:', name);
+                    }
+                },
+
+            })
+
+            //SELECTION DE L'ITEM DANS LE DROPDOWN
+            $('.dropdown').dropdown('set value', {{resource.syliusProductVariant.id}} ,true)
+
+            // CALCUL DE LA DATE DE FIN A PARTIR DU CHAMPS STARTEDAT
+            function calculateNewDate(value, unit, startDate) {
+                var currentDate = new Date(startDate);
+                
+                switch (unit) {
+                    case 'days':
+                        currentDate.setDate(currentDate.getDate() + value);
+                        break;
+                    case 'months':
+                        currentDate.setMonth(currentDate.getMonth() + value);
+                        break;
+                    case 'years':
+                        currentDate.setFullYear(currentDate.getFullYear() + value);
+                }
+
+                return currentDate;
+            }
+
+            // FORMATAGE POUR OBTENIR 'YYYY-MM-DD'
+            function formatDate(date) {
+                var year = date.getFullYear();
+                var month = ('0' + (date.getMonth() + 1)).slice(-2);
+                var day = ('0' + date.getDate()).slice(-2);
+
+                return year + '-' + month + '-' + day;
+            }
+
+        });
+    </script>
+
+
+    {{ sylius_template_event([event_prefix ~ '.javascripts', 'sylius.admin.update.javascripts'], { 'metadata': metadata }) }}
+{% endblock %}

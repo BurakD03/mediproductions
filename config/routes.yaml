@@ -53,6 +53,18 @@ app_admin_licence_create:
             section: admin
             # template: "@App/templates/office/index.html.twig"
             permission: true
+### UPDATE LICENCE ###
+app_admin_licence_update:
+    path: /admin/licences/{id}/edit
+    methods: [GET, PUT, PATCH]
+    defaults:
+        _controller: App\Controller\LicenceController::update
+        _sylius:
+            section: admin
+            permission: true
+    requirements:
+        id: \d+
+
 # AJAX QUERY FOR FIELD SELECT DROPDOWN
 app_admin_ajax_order_by_name_phrase:
     path: /admin/order/search
@@ -65,6 +77,6 @@ app_admin_ajax_order_by_name_phrase:
             permission: true
             repository:
                 method: findByNamePart
-                # arguments:
-                #     phrase: $phrase
-                #     limit: 5
+                arguments:
+                    phrase: $phrase
+                    limit: 5

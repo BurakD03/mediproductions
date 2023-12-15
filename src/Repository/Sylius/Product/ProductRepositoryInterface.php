@@ -8,6 +8,6 @@ use Sylius\Component\Core\Repository\ProductRepositoryInterface as BaseProductRe
 
 interface ProductRepositoryInterface extends BaseProductRepositoryInterface
 {
-    public function findAllProductVariant(string $codeCrm, ?int $limit = 2): array;
+    // public function findAllProductVariant(string $codeCrm, ?int $limit = 2): array;
     public function findByNameProductVariant(string $name, string $locale): array;
 }

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Order\Order;
 use App\Entity\Licence\Licence;
+use App\Entity\Product\ProductVariant;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Form\AbstractType;
 use App\Form\Type\OrderAutocompleteChoiceType;
@@ -43,6 +44,7 @@ class LicenceType extends AbstractType
             ])
             ->add('demo')
             ->add('state', ChoiceType::class, [
+                'required'   => true,
                 'choices'  => [
                     'In progress' => 'In progress',
                     'Completed' => 'Completed',
@@ -51,10 +53,14 @@ class LicenceType extends AbstractType
             // ->add('codeCrm')
             ->add('codeCrm')
             ->add('syliusOrder',EntityType::class, [
+                'required'   => false,
                 'class' => Order::class,
                 'choice_label' => 'number'
             ])
-            ->add('syliusProductVariant')
+            ->add('syliusProductVariant', EntityType::class, [
+                'class' => ProductVariant::class,
+                'choice_label' => 'name'
+            ])
 
             // ->add('syliusProductVariant', OrderAutocompleteChoiceType::class, [
             //     'resource' => 'app.licence',

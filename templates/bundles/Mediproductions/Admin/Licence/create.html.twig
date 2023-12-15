@@ -42,7 +42,18 @@
         {% else %}
             {# {{ form_widget(form) }} #}
             <div class="ui form">
+
             {{ form_errors(form) }}
+                <div class="field">
+                    {{ form_label(form.syliusProductVariant, 'Product Variant') }}
+                    <div class="ui fluid search selection dropdown">
+                        <input type="hidden"  id="licence_syliusProductVariant" name="licence[syliusProductVariant]" class="noselection">
+                        {# {{ form_widget(form.syliusProductVariant) }} #}
+                        <div class="default text">{{ form_label(form.syliusProductVariant, 'Product Variant') }}</div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu"></div>
+                    </div>
+                </div>
                 <div class="two fields">
                     <div class="required field">
                         <label>Start date</label>
@@ -65,7 +76,7 @@
                 </div>
             </div>
             <div class="ui grid">
-                <div class="eight wide column">
+                <div class="eight wide column required field">
                     {{ form_label(form.platform) }}
                     {{ form_widget(form.platform) }}
                 </div>
@@ -73,7 +84,7 @@
                     {{ form_label(form.codeCrm, 'Code CRM') }}
                     {{ form_widget(form.codeCrm) }}
                 </div>
-                <div class="sixteen wide column">
+                <div class="sixteen wide column required field">
                     {{ form_label(form.state, 'Status') }}
                     {{ form_widget(form.state) }}
 
@@ -92,15 +103,6 @@
 
 
 
-            <div class="">
-                {{ form_label(form.syliusProductVariant, 'Product Variant') }}
-                <div class="ui fluid search selection dropdown">
-                <input type="hidden"  id="licence_syliusProductVariant" name="licence[syliusProductVariant]" class="noselection">
-                {# {{ form_widget(form.syliusProductVariant) }} #}
-                <div class="default text">{{ form_label(form.syliusProductVariant, 'Product Variant') }}</div>
-                <i class="dropdown icon"></i>
-                <div class="menu"></div>
-            </div>
 
 
                 </div>         
@@ -110,7 +112,6 @@
             </diV> #}
         </div>
         {% endif %}
-
         {{ sylius_template_event([event_prefix ~ '.form', 'sylius.admin.create.form'], {'metadata': metadata, 'resource': resource, 'form': form}) }}
 
         {% include '@SyliusUi/Form/Buttons/_create.html.twig' with {'paths': {'cancel': index_url}} %}
@@ -129,17 +130,28 @@
     {{ parent() }}
 
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
+
     <script type="text/javascript">
 
-
-
         $(document).ready(function() {
+            // SI CHANGEMENT DE DATE DEPUIS CALENDAR DATE DEBUT
+            var startedAtOnChange;
+
             $('#rangestart').calendar({
+                {% if app.request.attributes.get('_controller') == 'App\\Controller\\LicenceController::create' %}
+                initialDate: new Date(),
+                {% endif %}
                 type: 'date',
                 endCalendar: $('#rangeend'),
                 formatter: {
                     date : 'YYYY-MM-DD'
+                },
+                onChange: function(value, text, $selectedItem) {
+                    // Stocker la date sélectionnée dans la variable $dateDateDeb
+                    startedAtOnChange = value;
+                    console.log('startedAtOnChange = ' + startedAtOnChange )
                 }
+
             });
 
             $('#rangeend').calendar({
@@ -147,17 +159,80 @@
                 startCalendar: $('#rangestart'),
                 formatter: {
                     date : 'YYYY-MM-DD'
-                    
                 },
+                
+
+                
             });
+
+            // Récupérer la date pré-remplie depuis #rangestart (DATE DEBUT)
+            var initialStartDate = $('#rangestart').calendar('get date', true);
+                   
             // SEMANTIC UI - SELECT DROPDOWN
             $('.ui.search.dropdown').dropdown({
                 apiSettings: {
-                url: '/admin/order/search?phrase={query}'
+                    url: '/admin/order/search?phrase={query}'
                 },
-                filterRemoteData: true,
-                maxSelections: 5
+                filterRemoteData: false,
+                maxSelections: 5,
+                action : 'activate',
+                onChange: function(value, name, text, $selectedItem) {
+                    // récupération de la partie numérique et l'unité du texte
+                    var match = name.match(/(\d+)\s*(\w+)/);
+                    //si date existe
+                    if (match) {
+                        var numericPart = match[1];
+                        var unit = match[2];
+                        //console.log(numericPart);
+                        //console.log(unit);
+                        
+                        // Utilise la date pré-remplie s'il y en a une, sinon récupére la date #rangestart (DATE DEBUT)
+                        var startDate = startedAtOnChange || initialStartDate;
+                        //console.log('startedAtOnChange = ' + startedAtOnChange)
+                        //console.log('initialStartDate = ' + initialStartDate)
+
+                        // Utiliser la date stockée dans $dateDateDeb si elle est définie
+                        var newDate = calculateNewDate(parseInt(numericPart), unit, startDate)
+
+                        // Formater la nouvelle date comme 'YYYY-MM-DD'
+                        var formattedDate = formatDate(newDate);
+
+                        // Mis à jour la date de fin
+                        $('.ui.calendar').calendar('set endDate', formattedDate);
+                    } else {
+                        console.error('Invalid duration format:', name);
+                    }
+                },
+
             });
+
+            // CALCUL DE LA DATE DE FIN A PARTIR DE LA DATE D'AUJOURD'HUI
+            function calculateNewDate(value, unit, startDate) {
+                var currentDate = new Date(startDate);
+                
+                switch (unit) {
+                    case 'days':
+                        currentDate.setDate(currentDate.getDate() + value);
+                        break;
+                    case 'months':
+                        currentDate.setMonth(currentDate.getMonth() + value);
+                        break;
+                    case 'years':
+                        currentDate.setFullYear(currentDate.getFullYear() + value);
+                }
+
+                return currentDate;
+            }
+
+            // FORMATAGE POUR OBTENIR 'YYYY-MM-DD'
+            function formatDate(date) {
+                var year = date.getFullYear();
+                var month = ('0' + (date.getMonth() + 1)).slice(-2);
+                var day = ('0' + date.getDate()).slice(-2);
+
+                return year + '-' + month + '-' + day;
+            }
+
         });
     </script>
     {{ sylius_template_event([event_prefix ~ '.javascripts', 'sylius.admin.create.javascripts'], { 'metadata': metadata }) }}

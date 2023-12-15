@@ -67,4 +67,5 @@ class LicenceRepository extends EntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
 }
