@@ -1,0 +1,8 @@
+payum:
+    gateways:
+        stripe_checkout:
+            factory: stripe_checkout
+            publishable_key: '%env(PAYUM_STRIPE_CHECKOUT_PUBLISHABLE_KEY)%'
+            secret_key: '%env(PAYUM_STRIPE_CHECKOUT_SECRET_KEY)%'
+            # payum.template.obtain_credit_card:
+            #     App\Payum\Stripe\Action\ConvertPaymentAction.php: ~
