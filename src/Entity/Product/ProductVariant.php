@@ -75,7 +75,7 @@ class ProductVariant extends BaseProductVariant
         return $this->durationValue;
     }
 
-    public function setDurationValue(int $durationValue): static
+    public function setDurationValue(?int $durationValue): static
     {
         $this->durationValue = $durationValue;
 
@@ -87,7 +87,7 @@ class ProductVariant extends BaseProductVariant
         return $this->durationUnit;
     }
 
-    public function setDurationUnit(string $durationUnit): static
+    public function setDurationUnit(?string $durationUnit): static
     {
         $this->durationUnit = $durationUnit;
 

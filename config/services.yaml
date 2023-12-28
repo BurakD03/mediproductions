@@ -59,3 +59,29 @@ services:
         tags: ['controller.service_arguments']
     # App\Repository\LicenceRepository:
     #     public: true
+
+########################## SUBSCRIPTION ##########################
+
+##  STRIPE  ##
+## OVERRIDE FluxSE\SyliusPayumStripePlugin\Action\ConvertPaymentAction CLASS
+    App\EventListener\Subscription\CustomConvertPaymentAction:
+        decorates: 'flux_se.sylius_payum_stripe.action.convert_payment'
+        arguments:
+            $detailsProvider: '@flux_se.sylius_payum_stripe.provider.details'
+            # $decoratedConvertPaymentAction: '@App\EventListener\Subscription\CustomConvertPaymentAction.inner'
+## OVERRIDE FluxSE\SyliusPayumStripePlugin\Provider\LineItemProvider CLASS
+    App\EventListener\Subscription\CustomLineItemProvider:
+        decorates: 'flux_se.sylius_payum_stripe.provider.line_item'
+        arguments:
+            $lineItemImagesProvider: '@flux_se.sylius_payum_stripe.provider.line_item_images'
+            $lineItemNameProvider: '@flux_se.sylius_payum_stripe.provider.line_item_name'
+            # $decoratedLineItemProvider: '@App\EventListener\Subscription\CustomLineItemProvider.inner'
+## OVERRIDE FluxSE\SyliusPayumStripePlugin\Provider\DetailsProvider CLASS
+    App\EventListener\Subscription\CustomDetailsProvider:
+        decorates: 'flux_se.sylius_payum_stripe.provider.details'
+        arguments:
+            $customerEmailProvider: '@flux_se.sylius_payum_stripe.provider.customer_email'
+            $lineItemsProvider: '@flux_se.sylius_payum_stripe.provider.line_items'
+            $paymentMethodTypesProvider: '@flux_se.sylius_payum_stripe.provider.payment_method_types'
+            $modeProvider: '@flux_se.sylius_payum_stripe.provider.mode'
+            # $decoratedDetailsProvider: '@App\EventListener\Subscription\CustomDetailsProvider.inner'
