@@ -53,7 +53,7 @@ final class CustomDetailsProvider implements DetailsProviderInterface
         }
 
         $details['mode'] = $this->modeProvider->getMode($order);
-        $lineItems = $this->lineItemsProvider->getLineItems($order);
+        // $lineItems = $this->lineItemsProvider->getLineItems($order);
 
 
 
@@ -66,10 +66,7 @@ $subscription1 = $stripe->subscriptions->create([
             'price_data' => [
                 'unit_amount' => 7999,
                 'currency' => 'EUR',
-                'product_data' => [
-                    'name' => '1x - VisioCare myBuddy - 1 an',
-                    'images' => ['https://placehold.it/400x300'],
-                ],
+                'product' => 'prod_PGsZ9XHX754qA3',
                 'recurring' => [
                     'interval' => 'year',
                     'interval_count' => 1,
@@ -88,10 +85,7 @@ $subscription2 = $stripe->subscriptions->create([
             'price_data' => [
                 'unit_amount' => 4999,
                 'currency' => 'EUR',
-                'product_data' => [
-                    'name' => '1x - VisioCare myBuddy - 6 mois',
-                    'images' => ['https://placehold.it/400x300'],
-                ],
+                'product' => 'prod_PGsZ9XHX754qA3',
                 'recurring' => [
                     'interval' => 'month',
                     'interval_count' => 6,
@@ -102,6 +96,21 @@ $subscription2 = $stripe->subscriptions->create([
     ],
 ]);         
 
+$details['line_items'] = [
+    [
+
+        'price' => $subscription1->items->data[0]->price->id,
+        'quantity' => 1,
+    ],
+    [
+
+        'price' => $subscription2->items->data[0]->price->id,
+        'quantity' => 1,
+    ],
+
+];
+
+$lineItems =$details['line_items'];
 
 
         if (null !== $lineItems) {
@@ -110,12 +119,12 @@ $subscription2 = $stripe->subscriptions->create([
 
 
         // s'il existe un item avec 'recurring' alors le mode = subscription 
-        foreach ($lineItems as $lineItem){
-            if(isset($lineItem['price_data']['recurring'])){
-                $details['mode'] = 'subscription';
-                break;
-            }
-        }
+        // foreach ($lineItems as $lineItem){
+        //     if(isset($lineItem['price_data']['recurring'])){
+        //         $details['mode'] = 'subscription';
+        //         break;
+        //     }
+        // }
         dd($lineItems);
 
         $paymentMethodTypes = $this->paymentMethodTypesProvider->getPaymentMethodTypes($order);
