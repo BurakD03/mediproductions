@@ -53,64 +53,106 @@ final class CustomDetailsProvider implements DetailsProviderInterface
         }
 
         $details['mode'] = $this->modeProvider->getMode($order);
-        // $lineItems = $this->lineItemsProvider->getLineItems($order);
+        $lineItems = $this->lineItemsProvider->getLineItems($order);
 
-
-
-$stripe = new \Stripe\StripeClient($_ENV['PAYUM_STRIPE_CHECKOUT_SECRET_KEY']);
-// Créer un abonnement mensuel
-$subscription1 = $stripe->subscriptions->create([
-    'customer' => 'cus_PGtraHz4pPNYHJ', // Remplacez par l'ID du client réel
-    'items' => [
-        [
-            'price_data' => [
-                'unit_amount' => 7999,
-                'currency' => 'EUR',
-                'product' => 'prod_PGsZ9XHX754qA3',
-                'recurring' => [
-                    'interval' => 'year',
-                    'interval_count' => 1,
-                ],
-            ],
-            'quantity' => 1,
-        ],
-    ],
-]);
-
-// Créer un abonnement tous les 6 mois
-$subscription2 = $stripe->subscriptions->create([
-    'customer' => 'cus_PGtraHz4pPNYHJ', // Remplacez par l'ID du client réel
-    'items' => [
-        [
-            'price_data' => [
-                'unit_amount' => 4999,
-                'currency' => 'EUR',
-                'product' => 'prod_PGsZ9XHX754qA3',
-                'recurring' => [
-                    'interval' => 'month',
-                    'interval_count' => 6,
-                ],
-            ],
-            'quantity' => 1,
-        ],
-    ],
-]);         
-
-$details['line_items'] = [
+$lineItems = [
     [
-
-        'price' => $subscription1->items->data[0]->price->id,
+        'price_data' => [
+            'unit_amount' => 7999,
+            'currency' => 'EUR',
+            'product_data' => [
+                'name' => 'VisioCare myBuddy Consult',
+                'images' => ['https://example.com/product1-image.jpg'],
+            ],
+        ],
         'quantity' => 1,
     ],
     [
-
-        'price' => $subscription2->items->data[0]->price->id,
+        'price_data' => [
+            'unit_amount' => 14999,
+            'currency' => 'EUR',
+            'product_data' => [
+                'name' => 'VisioCare myBuddy',
+                'images' => ['https://example.com/product2-image.jpg'],
+            ],
+            'recurring' => [
+                'interval' => 'month',
+                'interval_count' => 6,
+            ],
+        ],
         'quantity' => 1,
     ],
-
+    [
+        'price_data' => [
+            'unit_amount' => 44999,
+            'currency' => 'EUR',
+            'product_data' => [
+                'name' => 'VisioCare Home',
+                'images' => ['https://example.com/product2-image.jpg'],
+            ],
+            'recurring' => [
+                'interval' => 'month',
+                'interval_count' => 12,
+            ],
+        ],
+        'quantity' => 1,
+    ],
 ];
 
-$lineItems =$details['line_items'];
+// $stripe = new \Stripe\StripeClient($_ENV['PAYUM_STRIPE_CHECKOUT_SECRET_KEY']);
+// // Créer un abonnement mensuel
+// $subscription1 = $stripe->subscriptions->create([
+//     'customer' => 'cus_PGtraHz4pPNYHJ', // Remplacez par l'ID du client réel
+//     'items' => [
+//         [
+//             'price_data' => [
+//                 'unit_amount' => 7999,
+//                 'currency' => 'EUR',
+//                 'product' => 'prod_PGsZ9XHX754qA3',
+//                 'recurring' => [
+//                     'interval' => 'year',
+//                     'interval_count' => 1,
+//                 ],
+//             ],
+//             'quantity' => 1,
+//         ],
+//     ],
+// ]);
+
+// // Créer un abonnement tous les 6 mois
+// $subscription2 = $stripe->subscriptions->create([
+//     'customer' => 'cus_PGtraHz4pPNYHJ', // Remplacez par l'ID du client réel
+//     'items' => [
+//         [
+//             'price_data' => [
+//                 'unit_amount' => 4999,
+//                 'currency' => 'EUR',
+//                 'product' => 'prod_PGsZ9XHX754qA3',
+//                 'recurring' => [
+//                     'interval' => 'month',
+//                     'interval_count' => 6,
+//                 ],
+//             ],
+//             'quantity' => 1,
+//         ],
+//     ],
+// ]);         
+
+// $details['line_items'] = [
+//     [
+
+//         'price' => $subscription1->items->data[0]->price->id,
+//         'quantity' => 1,
+//     ],
+//     [
+
+//         'price' => $subscription2->items->data[0]->price->id,
+//         'quantity' => 1,
+//     ],
+
+// ];
+
+// $lineItems =$details['line_items'];
 
 
         if (null !== $lineItems) {
@@ -119,13 +161,13 @@ $lineItems =$details['line_items'];
 
 
         // s'il existe un item avec 'recurring' alors le mode = subscription 
-        // foreach ($lineItems as $lineItem){
-        //     if(isset($lineItem['price_data']['recurring'])){
-        //         $details['mode'] = 'subscription';
-        //         break;
-        //     }
-        // }
-        dd($lineItems);
+        foreach ($lineItems as $lineItem){
+            if(isset($lineItem['price_data']['recurring'])){
+                $details['mode'] = 'subscription';
+                break;
+            }
+        }
+        // dd($lineItems);
 
         $paymentMethodTypes = $this->paymentMethodTypesProvider->getPaymentMethodTypes($order);
         if ([] !== $paymentMethodTypes) {
