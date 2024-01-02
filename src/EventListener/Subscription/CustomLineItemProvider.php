@@ -54,12 +54,12 @@ final class CustomLineItemProvider implements LineItemProviderInterface
         
         // s'il existe DurationValue alors on ajoute recurring pour l'item
         if ($orderItem->getVariant()->getDurationValue() !== null) {
-            $intervalCount = $orderItem->getVariant()->getDurationValue() > 1 ? $orderItem->getVariant()->getDurationValue() : 1;
+            // $intervalCount = $orderItem->getVariant()->getDurationValue() > 1 ? $orderItem->getVariant()->getDurationValue() : 1;
 
             $priceData['recurring'] = [
                 // Supprime le 's' a la fin
                 'interval' => rtrim($orderItem->getVariant()->getDurationUnit(), 's'),
-                'interval_count' => $intervalCount,
+                'interval_count' => 1,
                 
             ];
         }

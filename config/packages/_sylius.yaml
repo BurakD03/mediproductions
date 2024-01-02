@@ -94,6 +94,8 @@ sylius_order:
         order:
             classes:
                 model: App\Entity\Order\Order
+                ### OVERRIDE SYLIUS ORDER CONTROLLER - MEDIPRODUCTIONS
+                controller: App\Controller\OrderController
         order_item:
             classes:
                 model: App\Entity\Order\OrderItem
@@ -272,6 +274,12 @@ sylius_resource:
                 model: App\Entity\Licence\Licence
                 controller: App\Controller\LicenceController
                 repository: App\Repository\LicenceRepository
+
+ ############## SYLIUS Order ##############       
+        # app.order:
+        #     classes:
+        #         model: App\Entity\Order\Order
+        #         controller: App\Controller\OrderController
 
  ############## SYLIUS PRODUCT ##############       
         # app.product:

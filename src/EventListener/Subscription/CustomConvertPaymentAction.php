@@ -51,4 +51,17 @@ final class CustomConvertPaymentAction implements ConvertPaymentActionInterface
             $request->getTo() === 'array'
         ;
     }
+
+    private function getLatestSubscriptionId(): string
+    {
+        $stripeClient = new \Stripe\StripeClient($_ENV['PAYUM_STRIPE_CHECKOUT_SECRET_KEY']);
+        // Récupére la liste des abonnements et retournez l'ID du dernier
+        $subscriptions = $stripeClient->subscriptions->all(['limit' => 1]);
+
+        if (!empty($subscriptions->data)) {
+            return $subscriptions->data[0]->id;
+        }
+
+        return '';
+    }
 }

@@ -237,9 +237,9 @@ class LicenceController extends ResourceController
         ];
         foreach ($items as $item) {
             $responseArray['results'][] = [
-                'name' => $item['TP']. ' - '. $item['TV'], // Remplacez par le nom réel de votre propriété dans l'entité Licence
-                'value' => $item['id'], // Remplacez par la valeur réelle de votre propriété dans l'entité Licence
-                'text' =>$item['TP']. ' - '.$item['durationValue']. ' '. $item['durationUnit'], // Remplacez par le texte réel de votre propriété dans l'entité Licence
+                'name' => $item['TP']. ' - '. $item['TV'],
+                'value' => $item['id'],
+                'text' =>$item['TP']. ' - '.$item['durationValue']. ' '. $item['durationUnit'],
 
             ];
 

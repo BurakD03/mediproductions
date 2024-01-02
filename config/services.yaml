@@ -60,6 +60,13 @@ services:
     # App\Repository\LicenceRepository:
     #     public: true
 
+########################## ORDER ##########################
+
+    ##  CONTROLLER  ##
+    App\Controller\OrderController:
+        class: App\Controller\OrderController
+        autowire: false
+
 ########################## SUBSCRIPTION ##########################
 
 ##  STRIPE  ##
