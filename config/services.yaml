@@ -69,6 +69,13 @@ services:
 
 ########################## SUBSCRIPTION ##########################
 
+    ##  CONTROLLER  ##
+    App\Controller\SubscriptionController:
+        class: App\Controller\SubscriptionController
+        autowire: false
+        public: true
+        tags: ['controller.service_arguments']
+
 ##  STRIPE  ##
 ## OVERRIDE FluxSE\SyliusPayumStripePlugin\Action\ConvertPaymentAction CLASS
     App\EventListener\Subscription\CustomConvertPaymentAction:

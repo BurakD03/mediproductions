@@ -15,3 +15,18 @@ sylius_resource:
                 model: App\Entity\Licence\Licence
                 repository: App\Repository\LicenceRepository
                 form : App\Form\LicenceType
+
+        ############## Subscription ##############
+        app.subscription:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Subscription\Subscription
+                repository: App\Repository\SubscriptionRepository
+                # form : App\Form\SubscriptionType
+
+        ############## Subscription Payment SCHEDULE ##############
+        app.subscription_payment_schedule:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\SubscriptionPaymentSchedule\SubscriptionPaymentSchedule
+                repository: App\Repository\SubscriptionRepository

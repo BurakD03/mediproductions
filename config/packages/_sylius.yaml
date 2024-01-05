@@ -274,7 +274,12 @@ sylius_resource:
                 model: App\Entity\Licence\Licence
                 controller: App\Controller\LicenceController
                 repository: App\Repository\LicenceRepository
-
+############## Subscription ##############
+        app.subscription:
+            classes:
+                model: App\Entity\Subscription\Subscription
+                controller: App\Controller\SubscriptionController
+                repository: App\Repository\SubscriptionRepository
  ############## SYLIUS Order ##############       
         # app.order:
         #     classes:

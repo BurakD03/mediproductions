@@ -17,3 +17,10 @@ symfony server:start -d
 
 2/
 stripe listen --events checkout.session.completed,checkout.session.async_payment_failed,checkout.session.async_payment_succeeded --forward-to https://localhost/payment/notify/unsafe/stripe_checkout_session_with_sca
+
+
+_total.html.twig
+
+vendor\sylius\sylius\src\Sylius\Bundle\AdminBundle\Resources\views\Order\Show\Summary\_totals.html.twig
+
+vendor\sylius\sylius\src\Sylius\Bundle\AdminBundle\Resources\views\Order\Show\Summary\_item.html.twig

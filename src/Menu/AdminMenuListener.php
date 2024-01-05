@@ -11,6 +11,19 @@ final class AdminMenuListener
         $menu = $event->getMenu();
         // $office = $event->getOffice;
 
+        // MENU - Subscription
+        $subscription = $menu
+            ->addChild('subscription')
+            ->setLabel('Manager Subscription')
+        ;
+
+        $subscription
+            ->addChild('subscription', [
+                'route' => 'app_admin_subscription_index',
+            ])
+            ->setLabel('Subscription')
+        ;
+
         // MENU - LICENCE
         $licence = $menu
             ->addChild('licence')

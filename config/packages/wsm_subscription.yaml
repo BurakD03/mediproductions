@@ -1,0 +1,36 @@
+winzou_state_machine:
+    subscription:
+        class: App\Entity\Subscription\Subscription
+        property_path: state
+        graph: subscription
+        state_machine_class: "%sylius.state_machine.class%"
+        states:
+            active: ~
+            pause: ~
+            cancelled: ~
+            completed: ~
+        transitions:
+            pause:
+                from: [active]
+                to: pause
+            activate:
+                from: [pause]
+                to: active
+            definitevely_cancelled:
+                from: [pause]
+                to: cancelled
+            cancelled:
+                from: [active]
+                to: cancelled
+            completed:
+                from: [active]
+                to: completed                
+        # callbacks:
+            # after:
+                # sylius_process_cart:
+                #     on: ["select_shipping", "address", "select_payment", "skip_shipping", "skip_payment"]
+                #     do: ["@sylius.order_processing.order_processor", "process"]
+                #     args: ["object"]
+                #     priority: -200
+
+    

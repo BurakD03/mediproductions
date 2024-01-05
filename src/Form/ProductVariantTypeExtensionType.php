@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Sylius\Bundle\ProductBundle\Form\Type\ProductVariantType;
 
 class ProductVariantTypeExtensionType extends AbstractTypeExtension
@@ -16,6 +17,9 @@ class ProductVariantTypeExtensionType extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('isRecurring', CheckboxType::class, [
+                'label' => 'Is recurring ?',
+            ])
             ->add('durationValue', IntegerType::class, [
                 'label' => 'Durée',
             ])

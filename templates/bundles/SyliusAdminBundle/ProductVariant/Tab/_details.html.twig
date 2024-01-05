@@ -31,6 +31,7 @@
         <div class="ui hidden divider"></div>
         <div class="ui segment">
             <h4 class="ui dividing header">{{ 'Duration'|trans }}</h4>
+            {{ form_row(form.isRecurring) }}
             {{ form_row(form.durationValue) }}{{ form_row(form.durationUnit) }}
         </div>
         <div class="ui hidden divider"></div>

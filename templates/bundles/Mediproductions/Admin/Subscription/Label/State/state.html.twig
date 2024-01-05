@@ -1,0 +1,16 @@
+{% set state_to_colors_map = {
+    active: 'blue',
+    paused: 'yellow',
+    cancelled: 'red',
+    completed: 'green',
+} %}
+{% set state_to_icons_map = {
+    active: 'forward',
+    paused: 'pause',
+    cancelled: 'stop circle',
+    completed: 'check',
+} %}
+<span class="ui label {{ state_to_colors_map[data] | default('grey') }}{% if attached is defined and attached == true %} top attached{% endif %}">
+    <i class="icon {{ state_to_icons_map[data] | default('exclamation') }}"></i>
+    {{ data | trans | capitalize }}
+</span>

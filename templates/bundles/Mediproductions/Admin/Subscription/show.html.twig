@@ -1,0 +1,261 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% set header = configuration.vars.header|default(metadata.applicationName~'.ui.show_'~metadata.name) %}
+{% set event_prefix = metadata.applicationName ~ '.admin.' ~ metadata.name ~ '.update' %}
+
+{% block title %}{{ header|trans }} {{ parent() }}{% endblock %}
+
+{% block content %}
+    {# {{ sylius_template_event([event_prefix, 'sylius.admin.update'], _context) }} #}
+{% set index_url = path(
+        configuration.vars.index.route.name|default(configuration.getRouteName('index')),
+        configuration.vars.index.route.parameters|default(configuration.vars.route.parameters|default({}))
+    )
+%}
+
+{############ HEADER - BREADCRUMB ############}
+<div class="ui stackable two column grid">
+    <div class="column">
+        {% include configuration.vars.templates.header_title|default('@SyliusAdmin/Crud/Update/_headerTitle.html.twig') %}
+        {% include configuration.vars.templates.breadcrumb|default('@SyliusAdmin/Crud/Update/_breadcrumb.html.twig') %}
+
+        {{ sylius_template_event([event_prefix ~ '.header', 'sylius.admin.update.header'], {'metadata': metadata, 'resource': resource}) }}
+    </div>
+    <div class="middle aligned column">
+        {% include configuration.vars.templates.toolbar|default('@SyliusAdmin/Crud/_toolbar.html.twig') ignore missing %}
+    </div>
+</div>
+
+{# BODY #}
+
+<div class="ui stackable grid sticky-container">
+    <div class="twelve wide column sticky-column">
+
+        {# BASE ORDER #}
+        <div class="ui segment">
+            <h4 class="ui dividing header">{{ 'Order'|trans }}</h4>
+            <table class="ui celled compact small table order-summary-table">
+                <thead>
+                <tr>
+                    <th class="five wide sylius-table-column-item">{{ 'Date'|trans }}</th>
+                    <th class="center aligned sylius-table-column-unit_price">{{ 'Number'|trans }}</th>
+                    <th class="center aligned sylius-table-column-unit_discount">{{ 'Payment State'|trans }}</th>
+                    <th class="center aligned sylius-table-column-unit_order_discount">{{ 'Total'|trans }}</th>
+                    <th class="center aligned sylius-table-column-discounted_unit_price">{{ 'Currency'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {# {% for item in order.items %}
+                    {% include '@SyliusAdmin/Order/Show/Summary/_item.html.twig' %}
+                {% endfor %} #}
+                </tbody>
+                <tfoot>
+                {# {% include '@SyliusAdmin/Order/Show/Summary/_totals.html.twig' %} #}
+                </tfoot>
+            </table>
+        </div>
+
+        {# RECURRING ITEMS #}
+        <div class="ui segment">
+            <h4 class="ui dividing header">{{ 'Subscripton Contents'|trans }}</h4>
+            <table class="ui celled compact small table order-summary-table">
+                <thead>
+                <tr>
+                    <th class="five wide sylius-table-column-item">{{ 'sylius.ui.order_item_product'|trans }}</th>
+                    <th class="center aligned sylius-table-column-unit_price">{{ 'sylius.ui.unit_price'|trans }}</th>
+                    <th class="center aligned sylius-table-column-unit_discount">{{ 'sylius.ui.unit_discount'|trans }}</th>
+                    <th class="center aligned sylius-table-column-unit_order_discount">{{ 'sylius.ui.distributed_order_discount'|trans }}</th>
+                    <th class="center aligned sylius-table-column-discounted_unit_price">{{ 'sylius.ui.discounted_unit_price'|trans }}</th>
+                    <th class="center aligned sylius-table-column-quantity">{{ 'sylius.ui.quantity'|trans }}</th>
+                    <th class="center aligned sylius-table-column-subtotal">{{ 'sylius.ui.subtotal'|trans }}</th>
+                    <th class="center aligned sylius-table-column-tax">{{ 'sylius.ui.tax'|trans }}</th>
+                    <th class="center aligned sylius-table-column-total">{{ 'sylius.ui.total'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in order.items %}
+                    {% if item.variant.isRecurring == true %}
+                        {% include '@SyliusAdmin/Order/Show/Summary/_item.html.twig' %}
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                {% include '@SyliusAdmin/Order/Show/Summary/_totals.html.twig' %}
+                </tfoot>
+            </table>
+        </div>
+
+        {# PAYMENT SUBSCRIPTION  SCHEDULE#}
+        <div class="ui segment">
+            <h4 class="ui dividing header">{{ 'Payment Schedule'|trans }}</h4>
+            <table class="ui celled compact small table order-summary-table">
+                <thead>
+                <tr>
+                    <th class="five wide sylius-table-column-item">{{ '#'|trans }}</th>
+                    <th class="center aligned">{{ 'Scheduled date'|trans }}</th>
+                    <th class="center aligned">{{ 'Fulfilled date'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for schedule in resource.getSubscriptionPaymentSchedules %}
+                    <tr>
+                        <td>#{{ loop.index }}</td>
+                        <td>{{ schedule.scheduledDate | date ('d-m-Y H:i:s') }}</td>
+                        <td>
+                            {% if schedule.fulfilledDate is not empty %}
+                                {{ schedule.fulfilledDate | date ('d-m-Y H:i:s') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    
+    <div class="four wide column">
+        {# {{ sylius_template_event('sylius.admin.order.show.sidebar', _context) }} #}
+
+        {# {% set order = mollie_subscription.orders | last %} #}
+
+        {# BASE TOTAL PAYMENT #}
+        {% if order.hasPayments %}
+        <div class="ui segment" id="payment-state">
+            {% include '@SyliusAdmin/Order/Label/PaymentState/' ~ order.paymentState ~ '.html.twig' with { 'value': 'sylius.ui.' ~ order.paymentState, 'attached': true } %}
+            <h3 class="ui dividing header">{{ 'sylius.ui.payments'|trans }}</h3>
+            <div class="ui relaxed divided list" id="sylius-payments">
+                {% import "@SyliusAdmin/Common/Macro/money.html.twig" as money %}
+                {% for payment in order.payments %}
+                    <div class="item">
+                        <div class="right floated content">
+                            
+
+                    <span class="ui green label">
+                        <i class="adjust icon"></i>
+                        Completed
+                    </span>
+                        </div>
+                        <i class="large payment icon"></i>
+                        <div class="content">
+                            <div class="header">
+                                {{ payment.method }}
+                            </div>
+                            <div class="description">
+                                {{ money.format(payment.amount, payment.order.currencyCode) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="ui segment center aligned" id="no-payments">
+            <span class="ui grey large label">
+                <i class="ban icon"></i> {{ 'sylius.ui.no_payments'|trans }}
+            </span>
+        </div>
+        {% endif %}
+
+        {# ACTIONS SUBSCRIPTION #}
+        {% set graph = constant("App\\EventListener\\Subscription\\Transitions\\SubscriptionRecurringTransitions::GRAPH_MANUAL") %}
+        {% set state_to_icons_map = {
+            pause: 'pause',
+            activate: 'forward',
+            cancel: 'stop circle'
+        } %}
+        {% set state_to_colors_map = {
+            pause: 'yellow',
+            activate: 'blue',
+            cancel: 'red'
+        } %}
+
+        <div class="ui segment" id="actions-subscription">
+            {% include 'bundles/Mediproductions/Admin/Subscription/Label/State/state.html.twig' with { 'data': resource.state, 'attached': true } %}
+            <h3 class="ui dividing header">{{ 'Subscription state management'|trans }}</h3>
+            <div class="ui relaxed divided list" id="sylius-transitions">
+                <div class="ui form" id="subscription-transitions">     
+                    {% for transition in sm_possible_transitions(resource, graph) %}
+                        {% include "@SyliusUi/Grid/Action/applyTransition.html.twig" with {
+                            data: resource,
+                            options: {
+                                transition: transition,
+                                graph: graph,
+                                link: {
+                                    route: 'transition_subscription_' ~ transition,
+                                    parameters: {
+                                        id: resource.id
+                                    }
+                                },
+                                class: state_to_colors_map[transition] | default('blue'),
+                            },
+                            action: {
+                                label: transition|capitalize,
+                                icon: state_to_icons_map[transition] | default('')
+                            }
+                        } %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {# SUBSCRIPTION IS EXTENDED #}
+        <div class="ui segment">
+            <h3 class="ui dividing header">{{ 'Subscription Extension'|trans }}</h3>
+            <div class="ui relaxed divided list">
+                <div class="ui form">     
+                    {{ form_row(form.isExtended, {
+                        'row_attr': {'class': 'ui toggle checkbox'},
+                        'attr': {'class': 'subscription-extended-checkbox'},
+                        
+                    }) }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+
+    {# {{ sylius_template_event([event_prefix ~ '.stylesheets', 'sylius.admin.update.stylesheets'], { 'metadata': metadata }) }} #}
+    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.subscription-extended-checkbox').change(function() {
+                // Récupére l'état de la checkbox
+                var isChecked = $(this).prop('checked');
+                
+                // Envoi une requête AJAX au serveur
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ path('update_subscription_extended', {'id': resource.id}) }}',
+                    data: {'isExtended': isChecked},
+                    success: function(response) {
+                        //console.log(response);
+                        toastr.success('Update successful !');
+                    }
+                });
+            });
+        });
+    </script>
+
+    {{ sylius_template_event([event_prefix ~ '.javascripts', 'sylius.admin.update.javascripts'], { 'metadata': metadata }) }}
+{% endblock %}

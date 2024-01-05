@@ -29,6 +29,9 @@ class ProductVariant extends BaseProductVariant
     #[ORM\Column(length: 255)]
     private ?string $durationUnit = null;
 
+    #[ORM\Column]
+    private ?bool $isRecurring = null;
+
     public function __construct()
     {
         parent::__construct();
@@ -90,6 +93,18 @@ class ProductVariant extends BaseProductVariant
     public function setDurationUnit(?string $durationUnit): static
     {
         $this->durationUnit = $durationUnit;
+
+        return $this;
+    }
+
+    public function getIsRecurring(): ?bool
+    {
+        return $this->isRecurring;
+    }
+
+    public function setIsRecurring(bool $isRecurring): static
+    {
+        $this->isRecurring = $isRecurring;
 
         return $this;
     }

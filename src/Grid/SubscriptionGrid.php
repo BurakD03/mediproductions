@@ -2,26 +2,23 @@
 
 namespace App\Grid;
 
-use App\Entity\Licence\Licence;
+use App\Entity\Subscription\Subscription;
 use Sylius\Bundle\GridBundle\Grid\AbstractGrid;
-use Sylius\Bundle\GridBundle\Builder\Filter\Filter;
 use Sylius\Bundle\GridBundle\Builder\Field\TwigField;
 use Sylius\Bundle\GridBundle\Builder\Action\ShowAction;
 use Sylius\Bundle\GridBundle\Builder\Field\StringField;
-use Sylius\Bundle\GridBundle\Builder\Filter\DateFilter;
 use Sylius\Bundle\GridBundle\Builder\Action\CreateAction;
 use Sylius\Bundle\GridBundle\Builder\Action\DeleteAction;
 use Sylius\Bundle\GridBundle\Builder\Action\UpdateAction;
 use Sylius\Bundle\GridBundle\Builder\Field\DateTimeField;
 use Sylius\Bundle\GridBundle\Builder\Filter\StringFilter;
-use Sylius\Bundle\GridBundle\Builder\Filter\BooleanFilter;
 use Sylius\Bundle\GridBundle\Builder\GridBuilderInterface;
 use Sylius\Bundle\GridBundle\Grid\ResourceAwareGridInterface;
 use Sylius\Bundle\GridBundle\Builder\ActionGroup\BulkActionGroup;
 use Sylius\Bundle\GridBundle\Builder\ActionGroup\ItemActionGroup;
 use Sylius\Bundle\GridBundle\Builder\ActionGroup\MainActionGroup;
 
-final class LicenceGrid extends AbstractGrid implements ResourceAwareGridInterface
+final class SubscriptionGrid extends AbstractGrid implements ResourceAwareGridInterface
 {
     public function __construct()
     {
@@ -30,33 +27,16 @@ final class LicenceGrid extends AbstractGrid implements ResourceAwareGridInterfa
 
     public static function getName(): string
     {
-        return 'app_admin_licence';
+        return 'app_admin_subscription';
     }
 
     public function buildGrid(GridBuilderInterface $gridBuilder): void
     {
         $gridBuilder
+            ->addFilter(
+                StringFilter::create('state')
+            )
 
-            ->addFilter(
-                StringFilter::create('codeCrm')
-            )
-            ->addFilter(
-                BooleanFilter::create('demo')
-            )
-            ->addFilter(
-                DateFilter::create('startedAt')
-            )
-            ->addFilter(
-                DateFilter::create('endedAt')
-            )
-            // ->addFilter(
-            //     DateRangeFilter::create('dateRange', 'startedAt', 'endedAt')
-            //         ->setFormat('yyyy-MM-dd') // Format de la date
-            //         ->setLabel('Date Range') // Libellé du filtre
-            //         // Autres options du filtre si nécessaire
-            // )
-
-    
             // see https://github.com/Sylius/SyliusGridBundle/blob/master/docs/field_types.md
             ->addField(
                 StringField::create('id')
@@ -64,30 +44,19 @@ final class LicenceGrid extends AbstractGrid implements ResourceAwareGridInterfa
                     ->setSortable(true)
             )
             ->addField(
-                DateTimeField::create('startedAt')
-                    ->setLabel('StartedAt')
-                    ->setSortable(true)
-            )
-            ->addField(
-                DateTimeField::create('endedAt')
-                    ->setLabel('EndedAt')
-            )
-            ->addField(
-                StringField::create('platform')
-                    ->setLabel('Platform')
-            )
-            //->addField(
-            //    TwigField::create('demo', 'path/to/field/template.html.twig')
-            //        ->setLabel('Demo')
-            //)
-            ->addField(
-                StringField::create('state')
+                TwigField::create('state', '@SyliusUi/Grid/Field/state.html.twig')
                     ->setLabel('State')
+                    ->setSortable(true)
+                    ->setOptions([
+                        'template' => 'bundles/Mediproductions/Admin/Subscription/Label/State/state.html.twig',
+                        'vars' => [
+                            'labels' => '@SyliusAdmin/Order/Label/State',
+                        ],
+                    ])                             
             )
             ->addField(
-                StringField::create('codeCrm')
-                    ->setLabel('CodeCrm')
-                    ->setSortable(true)
+                StringField::create('echeances')
+                    ->setLabel('Échéances')
             )
             ->addField(
                 DateTimeField::create('createdAt')
@@ -104,9 +73,9 @@ final class LicenceGrid extends AbstractGrid implements ResourceAwareGridInterfa
             )
             ->addActionGroup(
                 ItemActionGroup::create(
-                    // ShowAction::create(),
-                    UpdateAction::create(),
-                    DeleteAction::create()
+                    ShowAction::create(),
+                    // UpdateAction::create(),
+                    // DeleteAction::create()
                 )
             )
             ->addActionGroup(
@@ -119,6 +88,6 @@ final class LicenceGrid extends AbstractGrid implements ResourceAwareGridInterfa
 
     public function getResourceClass(): string
     {
-        return Licence::class;
+        return Subscription::class;
     }
 }

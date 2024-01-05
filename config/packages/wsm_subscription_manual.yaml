@@ -1,0 +1,23 @@
+winzou_state_machine:
+    subscription_manual:
+        class: App\Entity\Subscription\Subscription
+        property_path: state
+        graph: subscription_manual
+        state_machine_class: "%sylius.state_machine.class%"
+        states:
+            active: ~
+            pause: ~
+            cancelled: ~
+            completed: ~
+        transitions:
+            pause:
+                from: [active]
+                to: pause
+            activate:
+                from: [pause]
+                to: active
+            cancel:
+                from: [active, pause]
+                to: cancelled
+
+    

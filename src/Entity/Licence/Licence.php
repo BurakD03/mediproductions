@@ -2,12 +2,14 @@
 
 namespace App\Entity\Licence;
 
+
 use DateTimeInterface;
 use App\Entity\Order\Order;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LicenceRepository;
 use App\Entity\Product\ProductVariant;
+use App\Entity\Subscription\Subscription as Subscription;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 #[ORM\Entity(repositoryClass: LicenceRepository::class)]
@@ -48,6 +50,9 @@ class Licence implements ResourceInterface
 
     #[ORM\ManyToOne(inversedBy: 'licences')]
     private ?ProductVariant $syliusProductVariant = null;
+
+    #[ORM\ManyToOne(inversedBy: 'licence')]
+    private ?Subscription $subscription = null;
 
     public function getId(): ?int
     {
@@ -132,9 +137,9 @@ class Licence implements ResourceInterface
     }
 
     #[ORM\PrePersist]
-    public function setCreatedAt(): static
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -171,6 +176,18 @@ class Licence implements ResourceInterface
     public function setSyliusProductVariant(?ProductVariant $syliusProductVariant): static
     {
         $this->syliusProductVariant = $syliusProductVariant;
+
+        return $this;
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(?Subscription $subscription): static
+    {
+        $this->subscription = $subscription;
 
         return $this;
     }
